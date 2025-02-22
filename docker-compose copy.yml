@@ -1,0 +1,98 @@
+version: '3.9'
+
+services:
+
+  db:
+    image: postgres:latest
+    container_name: db
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${DATABASE_PORT}:${DATABASE_PORT}"
+    restart: always
+
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend_migrate
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    command: sh -c "\
+      python manage.py migrate"
+
+
+  add_db:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend_seed_db
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:
+      - migrate
+    command: sh -c "\
+      sleep 7 && \
+      python /app/backend_plants/DB/db_action.py && \
+      python /app/backend_plants/DB/db_pl_class.py && \
+      python /app/backend_plants/DB/db_pl_subclass.py && \
+      python /app/backend_plants/DB/db_pl_type.py && \
+      python /app/backend_plants/DB/db_plant.py && \
+      python /app/backend_plants/DB/db_add_admin.py && \
+      python /app/backend_plants/DB/db_add_user.py &&\
+      python /app/backend_plants/DB/check_from_minio.py && \
+      python /app/backend_plants/DB/db_pics_minio.py"
+
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on:
+      - db
+      - migrate
+      - add_db
+    restart: always
+    command: sh -c "\
+      python manage.py runserver 0.0.0.0:${PORT}"
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+      - "${MINIO_PORT_API}:${MINIO_PORT_API}"
+      - "${MINIO_PORT_CONSOLE}:${MINIO_PORT_CONSOLE}"
+    env_file:
+      - .env
+    command: server /data --console-address ":${MINIO_PORT_CONSOLE}"
+    volumes:
+      - minio_data:/data
+    restart: always
+
+  redis:
+    image: redis:alpine
+    container_name: redis_backend
+    ports:
+      - "${REDIS_EXTERNAL_PORT}:${REDIS_PORT}"
+    restart: always
+
+
+volumes:
+  postgres_data:
+  minio_data:

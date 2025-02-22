@@ -30,7 +30,7 @@ add_db:
 ```
 После этого запустить контейнеры
 ```
-docker-compose up -d
+docker-compose up
 ```
 
 ## Просмотр логов из api (контейнер web)

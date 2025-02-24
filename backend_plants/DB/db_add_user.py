@@ -1,6 +1,10 @@
 import requests
+import environ
+env = environ.Env()
 
-REGISTER_URL = 'http://plantsbackend:8100/api/register/'
+HOST_BACKEND = env('HOST_BACKEND')
+PORT=env('PORT')
+REGISTER_URL = f'http://{HOST_BACKEND}:{PORT}/api/register/'
 
 users_data = [
     {

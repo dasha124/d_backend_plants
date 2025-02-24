@@ -1,5 +1,8 @@
 import requests
+import environ
+env = environ.Env()
 
-REGISTER_URL = 'http://plantsbackend:8100/api/from_minio/'
+HOST_BACKEND = env('HOST_BACKEND')
+REGISTER_URL = f'http://{HOST_BACKEND}:8100/api/from_minio/'
 
 print("Процедура приверки минио завершена.")

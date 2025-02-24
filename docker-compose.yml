@@ -40,14 +40,14 @@ services:
     command: sh -c "\
       sleep 7 && \
       python /app/backend_plants/DB/db_action.py && \
+      python /app/backend_plants/DB/db_pics_minio.py && \
       python /app/backend_plants/DB/db_pl_class.py && \
       python /app/backend_plants/DB/db_pl_subclass.py && \
       python /app/backend_plants/DB/db_pl_type.py && \
       python /app/backend_plants/DB/db_plant.py && \
       python /app/backend_plants/DB/db_add_admin.py && \
       python /app/backend_plants/DB/db_add_user.py &&\
-      python /app/backend_plants/DB/check_from_minio.py && \
-      python /app/backend_plants/DB/db_pics_minio.py"
+      python /app/backend_plants/DB/check_from_minio.py"
 
   web:
     build:

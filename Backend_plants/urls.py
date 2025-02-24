@@ -25,7 +25,7 @@ urlpatterns = [
    path(r'api/plants/add_plant/', views.add_new_plant, name='add_new_plant'), # (post)
    path(r'api/plants/<int:id>/update_plant/', views.update_plant, name='update_plant'), # (put)
    path(r'api/plants/<int:id>/delete_plant/', views.delete_plant, name='delete_plant'), # (del)
-   path(r'api/plants/<int:id>/obj_delete_plant/', views.obj_delete_plant, name='obj_delete_plant'), # (del)
+   # path(r'api/plants/<int:id>/obj_delete_plant/', views.obj_delete_plant, name='obj_delete_plant'), # (del)
    path(r'api/plants/<int:id_plant>/<int:id_coll>/add_plant_to_collection/', views.add_plant_to_collection, name='add_plant_to_collection'), # (post)
 
 

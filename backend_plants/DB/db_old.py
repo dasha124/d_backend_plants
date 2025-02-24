@@ -8,7 +8,7 @@ import base64
 conn = psycopg2.connect(user="root",
                         password="root",
                         host="127.0.0.1",
-                        port="5432",
+                        port="5532",
                         database='plants_app_db')
 
 

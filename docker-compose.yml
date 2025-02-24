@@ -1,24 +1,22 @@
-version: '3.9'
+version: "3.9"
 
 services:
-
   db:
     image: postgres:latest
-    container_name: db
+    container_name: plants_db
     env_file:
       - .env
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - plants_postgres_data:/var/lib/postgresql/data
     ports:
       - "${DATABASE_PORT}:${DATABASE_PORT}"
     restart: always
-
 
   migrate:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: backend_migrate
+    container_name: plants_backend_migrate
     env_file:
       - .env
     volumes:
@@ -28,12 +26,11 @@ services:
     command: sh -c "\
       python manage.py migrate"
 
-
   add_db:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: backend_seed_db
+    container_name: plants_backend_seed_db
     env_file:
       - .env
     volumes:
@@ -52,12 +49,11 @@ services:
       python /app/backend_plants/DB/check_from_minio.py && \
       python /app/backend_plants/DB/db_pics_minio.py"
 
-
   web:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: backend
+    container_name: plantsbackend
     env_file:
       - .env
     volumes:
@@ -74,7 +70,7 @@ services:
 
   minio:
     image: minio/minio
-    container_name: minio
+    container_name: plantsminio
     ports:
       - "${MINIO_PORT_API}:${MINIO_PORT_API}"
       - "${MINIO_PORT_CONSOLE}:${MINIO_PORT_CONSOLE}"
@@ -82,17 +78,16 @@ services:
       - .env
     command: server /data --console-address ":${MINIO_PORT_CONSOLE}"
     volumes:
-      - minio_data:/data
+      - plnats_minio_data:/data
     restart: always
 
   redis:
     image: redis:alpine
-    container_name: redis_backend
+    container_name: plants_redis_backend
     ports:
       - "${REDIS_EXTERNAL_PORT}:${REDIS_PORT}"
     restart: always
 
-
 volumes:
-  postgres_data:
-  minio_data:
+  plants_postgres_data:
+  plnats_minio_data:

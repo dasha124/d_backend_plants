@@ -1,6 +1,6 @@
 import requests
 
-REGISTER_URL = 'http://backend:8000/api/register/'
+REGISTER_URL = 'http://plantsbackend:8000/api/register/'
 
 users_data = [
     {

@@ -1,6 +1,6 @@
 import requests
 
-REGISTER_URL = 'http://backend:8000/api/register_admin/'
+REGISTER_URL = 'http://plantsbackend:8000/api/register_admin/'
 
 users_data = [
     {
@@ -19,7 +19,7 @@ for user_data in users_data:
     response = requests.post(REGISTER_URL, json=user_data)
     
     if response.status_code == 201:
-        print(f"Пользователь успешно зарегистрирован.")
+        print(f"Админ успешно зарегистрирован.")
     else:
         print(f"Ошибка при регистрации {user_data['username']}: {response.json()}")
 
